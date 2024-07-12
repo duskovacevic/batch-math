@@ -5,7 +5,7 @@ setlocal EnableDelayedExpansion
 	set w=%~2
 
 	if %w% equ -%ONE% (
-		endlocal & set %~1=-%PI%
+		endlocal & set %~1=%PI%
 		exit /b 0
 	)
 	if %w% equ %ONE% (
@@ -23,18 +23,20 @@ setlocal EnableDelayedExpansion
 		exit /b 0
 	)
 
+	call :is_negative wNeg = %w%
+	if %wNeg% equ %TRUE% (
+		call :negate w = %w%
+	)
+
 	:: acos(w) = atan(sqrt(1 - w^2) / w)
 	call :mul r1 = %w%, %w%
 	call :sub r2 = %ONE%, %r1%
 	call :sqrt r3 = %r2%
 	call :div r4 = %w%, %r3%
-	call :is_negative wNeg = %w%
-	
+	call :atan return = %r4%
+
 	if %wNeg% equ %TRUE% (
-		call :add r5 = %r4%, %PI%
-		call :atan return = %r5%
-	) else (
-		call :atan return = %r4%
+		call :add return = %PI%, -%return%
 	)
 
 endlocal & set %~1=%return%
