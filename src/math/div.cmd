@@ -12,17 +12,22 @@ setlocal EnableDelayedExpansion
     set n=%~2
     set d=%~3
 
+    call :compare nComp = %n%, %ZERO%
+    call :compare dComp = %d%, %ZERO%
     set /a negate = 0
-    if %n% lss 0 set /a negate = 1
-    if %d% lss 0 set /a "negate ^= 1"
+    if %nComp% lss 0 set /a negate = 1
+    if %dComp% lss 0 set /a "negate ^= 1"
+
+    call :abs n = %n%
+    call :abs d = %d%
 
     call :_normalize d, dE = %d%
     call :shift n = %n%, -%dE%
-    
+
     :: X := 48/17 − 32/17 × D'
     call :mul r1 = %F32_17%, %d%
     call :sub x = %F48_17%, %r1%
-    
+
     for /L %%I in (1,1,%REPEAT%) do call :_newton_raphson_iteration x = !x!, %d%
 
     :: return N' × X

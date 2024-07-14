@@ -11,22 +11,25 @@ setlocal EnableDelayedExpansion
 	if not [%arg1::=%] == [%arg1%] (
 		set method=%~1
 		set param1=%~2
-		if defined %~3 set param2=%~3
+		set param2=%~3
 	) else (
 		set var=%~1
 		set method=%~2
 		set param1=%~3
-		if defined %~4 set param2=%~4
+		set param2=%~4
 	)
 
 	if [%param1:E=%] == [%param1%] (
 		set convert=%TRUE%
 		call :set param1 = %param1%
-		if defined param2 (
+		if [%param2%] neq [] (
 			call :set param2 = %param2%
 		)
 	)
 	
+	:: TODO handle more params
+	:: TODO add some help
+
     :: float
 	if [%method%] equ [:set] call :set return = %param1% & goto :done
 	if [%method%] equ [:to_string] call :to_string return = %param1% & goto :done
@@ -62,6 +65,7 @@ setlocal EnableDelayedExpansion
 	if [%method%] equ [:exp] call :exp return = %param1% & goto :done
 	if [%method%] equ [:pow] call :pow return = %param1%, %param2% & goto :done
 
+	:: Add help instead
 	echo Method %method% not found.
 	
 	endlocal
