@@ -12,3 +12,11 @@ df = df[df.y.lt(10)]
 df = df[df.y.gt(-10)]
 SaveResults("tan", df)
 
+df = Invoke("asin", -1, 1, 80, lambda x : math.asin(x))
+SaveResults("asin", df)
+
+df = Invoke("acos", -1, 1, 80, lambda x : math.acos(x))
+SaveResults("acos", df)
+
+df = Invoke("atan", -4, 4, 80, lambda x : math.atan(x))
+SaveResults("atan", df)

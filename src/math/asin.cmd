@@ -1,7 +1,7 @@
 :asin return = w
 setlocal EnableDelayedExpansion
 
-	set debug=
+	set debug=rem
 	set w=%~2
 
 	if %w% equ -%ONE% (
@@ -13,7 +13,6 @@ setlocal EnableDelayedExpansion
 		exit /b 0
 	)
 	call :compare compare = %w%, -%ONE%
-	echo %compare%
 	if %compare% lss 0 (
 		echo test 5
 		endlocal & set %~1=%NAN%
@@ -31,8 +30,6 @@ setlocal EnableDelayedExpansion
 	call :sqrt r3 = %r2%
 	call :div r4 = %w%, %r3%
 	call :atan return = %r4%
-
-	%debug% echo [%r1%][%r2%][%r3%][%r4%]
 
 endlocal & set %~1=%return%
 exit /b 0

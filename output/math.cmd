@@ -180,43 +180,11 @@ goto :eof
 :acos return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set w=%~2
 
-	if %w% equ -%ONE% (
-		endlocal & set %~1=%PI%
-		exit /b 0
-	)
-	if %w% equ %ONE% (
-		endlocal & set %~1=%ZERO%
-		exit /b 0
-	)
-	call :compare compare = %w%, -%ONE%
-	if %compare% lss 0 (
-		endlocal & set %~1=%NAN%
-		exit /b 0
-	)
-	call :compare compare = %w%, %ONE%
-	if %compare% gtr 0 (
-		endlocal & set %~1=%NAN%
-		exit /b 0
-	)
-
-	call :is_negative wNeg = %w%
-	if %wNeg% equ %TRUE% (
-		call :negate w = %w%
-	)
-
-	:: acos(w) = atan(sqrt(1 - w^2) / w)
-	call :mul r1 = %w%, %w%
-	call :sub r2 = %ONE%, %r1%
-	call :sqrt r3 = %r2%
-	call :div r4 = %w%, %r3%
-	call :atan return = %r4%
-
-	if %wNeg% equ %TRUE% (
-		call :add return = %PI%, -%return%
-	)
+	:: acos(w) = π / 2 - asin(w)
+	call :asin r1 = %w%
+	call :sub return = %HALF_PI%, %r1%
 
 endlocal & set %~1=%return%
 exit /b 0
@@ -245,7 +213,7 @@ exit /b 0
 :asin return = w
 setlocal EnableDelayedExpansion
 
-	set debug=
+	set debug=rem
 	set w=%~2
 
 	if %w% equ -%ONE% (
@@ -257,9 +225,8 @@ setlocal EnableDelayedExpansion
 		exit /b 0
 	)
 	call :compare compare = %w%, -%ONE%
-	echo %_c%[asin.cmd][line 16]%_r% %compare%
 	if %compare% lss 0 (
-		echo %_c%[asin.cmd][line 18]%_r% test 5
+		echo %_c%[asin.cmd][line 17]%_r% test 5
 		endlocal & set %~1=%NAN%
 		exit /b 0
 	)
@@ -275,8 +242,6 @@ setlocal EnableDelayedExpansion
 	call :sqrt r3 = %r2%
 	call :div r4 = %w%, %r3%
 	call :atan return = %r4%
-
-	%debug% echo %_c%[asin.cmd][line 35]%_r% [%r1%][%r2%][%r3%][%r4%]
 
 endlocal & set %~1=%return%
 exit /b 0
