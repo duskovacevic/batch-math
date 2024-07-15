@@ -20,3 +20,12 @@ SaveResults("acos", df)
 
 df = Invoke("atan", -4, 4, 80, lambda x : math.atan(x))
 SaveResults("atan", df)
+
+df = Invoke("sinh", -4, 4, 80, lambda x : math.sinh(x))
+SaveResults("sinh", df)
+
+df = Invoke("cosh", -4, 4, 80, lambda x : math.cosh(x))
+SaveResults("cosh", df)
+
+df = Invoke("tanh", -4, 4, 80, lambda x : math.tanh(x))
+SaveResults("tanh", df)
