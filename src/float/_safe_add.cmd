@@ -4,8 +4,7 @@ setlocal EnableDelayedExpansion
 	set debug=rem
 	set a=%~2
 	set b=%~3
-	:: call %DECODE:#=a%
-	:: call %DECODE:#=b%
+	
 	call :_decode aM, aE = %~2
 	call :_decode bM, bE = %~3
 	
@@ -53,6 +52,12 @@ setlocal EnableDelayedExpansion
 	:: magic number needs to be handled -2147483648
 
 	set /a newM=aM + bM
+
+	:: check if zero
+	if %newM% equ 0 (
+		endlocal & set %~1=%ZERO%
+		exit /b 0
+	)
 	
 	%debug% echo Add 2 - = [%newM%] [%newE%]
 	
@@ -106,7 +111,7 @@ setlocal EnableDelayedExpansion
 			set /a newM=-newM
 		)
 	)
-	
+
 	%debug% echo Add 4 - [!aM!] + [!bM!]; [!aE!] [!bE!] = [!newM!] [!newE!]
 
 endlocal & set %~1=%newM%E%newE%

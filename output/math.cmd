@@ -196,16 +196,37 @@ setlocal EnableDelayedExpansion
 	set w=%~2
 
 	call :compare compare = %w%, %ONE%
+	if %compare% equ 0 (
+		endlocal & set %~1=%ZERO%
+		exit /b 0
+	)
 	if %compare% lss 0 (
 		endlocal & set %~1=%NAN%
 		exit /b 0
 	)
 
+	%debug% echo %_c%[acosh.cmd][line 17]%_r% [%w%]
+
+	:: acosh(w) = ln(w + sqrt(w^2 - 1))
 	call :mul r1 = %w%, %w%
+
+	%debug% echo %_c%[acosh.cmd][line 22]%_r% [%r1%]
+
 	call :sub r2 = %r1%, %ONE%
+
+	%debug% echo %_c%[acosh.cmd][line 26]%_r% [%r2%]
+
 	call :sqrt r3 = %r2%
+
+	%debug% echo %_c%[acosh.cmd][line 30]%_r% [%r3%]
+
 	call :add r4 = %w%, %r3%
-	call :ln result = %r4%
+
+	%debug% echo %_c%[acosh.cmd][line 34]%_r% [%r4%]
+
+	call :ln return = %r4%
+
+	%debug% echo %_c%[acosh.cmd][line 38]%_r% [%return%]
 
 endlocal & set %~1=%return%
 exit /b 0
@@ -270,12 +291,12 @@ setlocal EnableDelayedExpansion
 
 	:: atan(1 / w) = π / 2 - atan(w)
 	:: w < 1
-	
 	call :compare compare = %w%, %ONE%
 	if %compare% geq 0 (
 		call :div w = %ONE%, %w%
 	)
 
+	:: z1 = z0 + atan(y / x)
 	call :_circular_cordic _x, _y, z = %ONE%, %w%, %ZERO%, %VECTORING%
 
 	if %compare% geq 0 (
@@ -317,6 +338,7 @@ setlocal EnableDelayedExpansion
 	call :sub M = %ONE%, %r1%
 	set /a E = 0
 
+	:: _normalize?
 	:while_atanh
 		call :compare compare = %M%, %HALF%
 		if %compare% geq 0 goto :done_atanh
@@ -327,7 +349,8 @@ setlocal EnableDelayedExpansion
 		goto :while_atanh
 	:done_atanh
 
-	if %E% equ 0 (		
+	if %E% equ 0 (	
+		:: z1 = z0 + atanh(y / x)
 		call :hyperbolic_cordic _x, _y, return = %ONE%, %w%, %ZERO%, %VECTORING%
 	) else (
 
@@ -338,6 +361,7 @@ setlocal EnableDelayedExpansion
 		call :sub r6 = %r5%, %r3%
 		call :div r7 = %r4%, %r6%
 
+		:: z1 = z0 + atanh(y / x)
 		call :_hyperbolic_cordic _x, _y, z = %ONE%, %r7%, %ZERO%, %VECTORING%
 
 		set /a halfE=E / 2
@@ -367,34 +391,16 @@ setlocal EnableDelayedExpansion
 	set w=%~2
 
 	call :div Q = %w%, %HALF_PI%
-	%debug% echo %_c%[cos.cmd][line 14]%_r% Q = [%Q%]
-	%debug% call :to_string sq = %Q%
-	%debug% echo %_c%[cos.cmd][line 16]%_r% sq = [%sq%]
-	
 	call :to_int Q = %Q%
-	%debug% echo %_c%[cos.cmd][line 19]%_r% Q = [%Q%]
 	call :set fQ = %Q%
-	%debug% echo %_c%[cos.cmd][line 21]%_r% fQ = [%fQ%]
-	%debug% call :to_string sfQ = %fQ%
-	%debug% echo %_c%[cos.cmd][line 23]%_r% sfQ = [%sfQ%]
-	
 	call :mul m = %fQ%, %HALF_PI%
-	%debug% call :to_string sm = %m%
-	%debug% echo %_c%[cos.cmd][line 27]%_r% sm = [%sm%]
 	call :sub D = %w%, %m%
 	set /a "Qmod4=Q%%4"
 
-	%debug% echo %_c%[cos.cmd][line 31]%_r% cos 0 - [%Q%][%w%][%m%][%Qmod4%]
-	
-	%debug% echo %_c%[cos.cmd][line 33]%_r% cos 1 - [%inverseCircularGain%][%D%]
-	%debug% call :to_string sicg = %inverseCircularGain%
-	%debug% call :to_string sd = %D%
-	%debug% echo %_c%[cos.cmd][line 36]%_r% cos 2 - [%sicg%][%sd%]
-
+	:: x1 = K(x0 * cos(z) - y0 * sin(z))
+	:: y1 = K(y0 * cos(z) + x0 * sin(z))
 	call :_circular_cordic x, y, _z = %inverseCircularGain%, %ZERO%, %D%, %ROTATION%
 	
-	%debug% echo %_c%[cos.cmd][line 40]%_r% cos 3 - [%x%][%y%][%_z%]
-
 	if %Qmod4% equ 0 set return=%x% & goto :cos_done
 	if %Qmod4% equ 1 call :negate return = %y% & goto :cos_done
 	if %Qmod4% equ -3 call :negate return = %y% & goto :cos_done
@@ -1642,12 +1648,11 @@ setlocal EnableDelayedExpansion
 	set debug=rem
 	set a=%~2
 	set b=%~3
-	:: call %DECODE:#=a%
-	:: call %DECODE:#=b%
+	
 	call :_decode aM, aE = %~2
 	call :_decode bM, bE = %~3
 	
-	%debug% echo %_c%[_safe_add.cmd][line 12]%_r% [%aM%][%aE%][%bM%][%bE%]
+	%debug% echo %_c%[_safe_add.cmd][line 11]%_r% [%aM%][%aE%][%bM%][%bE%]
 	
 	if %aM% equ 0 (
 		endlocal & set %~1=%bM%E%bE%
@@ -1686,13 +1691,19 @@ setlocal EnableDelayedExpansion
 		)
 	)
 	
-	%debug% echo %_c%[_safe_add.cmd][line 51]%_r% Add 1 - [%aM%] + [%bM%]; [%aE%] [%bE%]
+	%debug% echo %_c%[_safe_add.cmd][line 50]%_r% Add 1 - [%aM%] + [%bM%]; [%aE%] [%bE%]
 	
 	:: magic number needs to be handled -2147483648
 
 	set /a newM=aM + bM
+
+	:: check if zero
+	if %newM% equ 0 (
+		endlocal & set %~1=%ZERO%
+		exit /b 0
+	)
 	
-	%debug% echo %_c%[_safe_add.cmd][line 57]%_r% Add 2 - = [%newM%] [%newE%]
+	%debug% echo %_c%[_safe_add.cmd][line 62]%_r% Add 2 - = [%newM%] [%newE%]
 	
 	set overflow=%FALSE%
 	if %aM% lss 0 (
@@ -1713,7 +1724,7 @@ setlocal EnableDelayedExpansion
 		set overflow=%TRUE%
 	)
 	
-	%debug% echo %_c%[_safe_add.cmd][line 78]%_r% Add 2a - [%overflow%]
+	%debug% echo %_c%[_safe_add.cmd][line 83]%_r% Add 2a - [%overflow%]
 	
 	if %overflow% equ %TRUE% (
 		:: Overflow
@@ -1723,20 +1734,20 @@ setlocal EnableDelayedExpansion
 		set /a newM=aM + bM
 	)
 	
-	%debug% echo %_c%[_safe_add.cmd][line 88]%_r% Add 3 - [!aM!] + [!bM!]; [!aE!] [!bE!] = [!newM!] [!newE!]
+	%debug% echo %_c%[_safe_add.cmd][line 93]%_r% Add 3 - [!aM!] + [!bM!]; [!aE!] [!bE!] = [!newM!] [!newE!]
 	
 	:: normalize
 	if %newM% neq 0 (
 		set /a sign=0
 		::if %newM% equ -2147483648
 		if %newM% lss 0 (
-			%debug% echo %_c%[_safe_add.cmd][line 95]%_r% What
+			%debug% echo %_c%[_safe_add.cmd][line 100]%_r% What
 			set /a sign=1
 			set /a newM=-newM
 		)
-		%debug% echo %_c%[_safe_add.cmd][line 99]%_r% Add 3a - !newM!
+		%debug% echo %_c%[_safe_add.cmd][line 104]%_r% Add 3a - !newM!
 		call :_most_significant_bit bit = !newM!
-		%debug% echo %_c%[_safe_add.cmd][line 101]%_r% Add 3b - !bit!
+		%debug% echo %_c%[_safe_add.cmd][line 106]%_r% Add 3b - !bit!
 		set /a nE=31 - bit
 		set /a "newM<<=nE"
 		set /a "newE-=nE"
@@ -1744,8 +1755,8 @@ setlocal EnableDelayedExpansion
 			set /a newM=-newM
 		)
 	)
-	
-	%debug% echo %_c%[_safe_add.cmd][line 110]%_r% Add 4 - [!aM!] + [!bM!]; [!aE!] [!bE!] = [!newM!] [!newE!]
+
+	%debug% echo %_c%[_safe_add.cmd][line 115]%_r% Add 4 - [!aM!] + [!bM!]; [!aE!] [!bE!] = [!newM!] [!newE!]
 
 endlocal & set %~1=%newM%E%newE%
 exit /b 0
