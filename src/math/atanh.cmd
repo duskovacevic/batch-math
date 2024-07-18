@@ -38,7 +38,8 @@ setlocal EnableDelayedExpansion
 		goto :while_atanh
 	:done_atanh
 
-	if %E% equ 0 (		
+	if %E% equ 0 (	
+		:: z1 = z0 + atanh(y / x)
 		call :hyperbolic_cordic _x, _y, return = %ONE%, %w%, %ZERO%, %VECTORING%
 	) else (
 
@@ -49,6 +50,7 @@ setlocal EnableDelayedExpansion
 		call :sub r6 = %r5%, %r3%
 		call :div r7 = %r4%, %r6%
 
+		:: z1 = z0 + atanh(y / x)
 		call :_hyperbolic_cordic _x, _y, z = %ONE%, %r7%, %ZERO%, %VECTORING%
 
 		set /a halfE=E / 2

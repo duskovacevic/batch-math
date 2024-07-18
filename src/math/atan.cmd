@@ -6,12 +6,12 @@ setlocal EnableDelayedExpansion
 
 	:: atan(1 / w) = π / 2 - atan(w)
 	:: w < 1
-	
 	call :compare compare = %w%, %ONE%
 	if %compare% geq 0 (
 		call :div w = %ONE%, %w%
 	)
 
+	:: z1 = z0 + atan(y / x)
 	call :_circular_cordic _x, _y, z = %ONE%, %w%, %ZERO%, %VECTORING%
 
 	if %compare% geq 0 (

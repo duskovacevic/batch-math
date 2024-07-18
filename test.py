@@ -29,3 +29,6 @@ SaveResults("cosh", df)
 
 df = Invoke("tanh", -4, 4, 80, lambda x : math.tanh(x))
 SaveResults("tanh", df)
+
+df = Invoke("asinh", -4, 4, 80, lambda x : math.asinh(x))
+SaveResults("asinh", df)

@@ -1,4 +1,4 @@
-:asinh return = w
+:acosh return = w
 setlocal EnableDelayedExpansion
 
 	set debug=rem
@@ -10,6 +10,7 @@ setlocal EnableDelayedExpansion
 		exit /b 0
 	)
 
+	:: acosh(w) = ln(w + sqrt(w^2 - 1))
 	call :mul r1 = %w%, %w%
 	call :sub r2 = %r1%, %ONE%
 	call :sqrt r3 = %r2%

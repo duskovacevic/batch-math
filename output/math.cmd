@@ -189,7 +189,7 @@ setlocal EnableDelayedExpansion
 endlocal & set %~1=%return%
 exit /b 0
 
-:asinh return = w
+:acosh return = w
 setlocal EnableDelayedExpansion
 
 	set debug=rem
@@ -252,11 +252,12 @@ setlocal EnableDelayedExpansion
 	set debug=rem
 	set w=%~2
 
+	:: ln(w + sqrt(w^2 + 1))
 	call :mul r1 = %w%, %w%
 	call :add r2 = %r1%, %ONE%
 	call :sqrt r3 = %r2%
 	call :add r4 = %w%, %r3%
-	call :ln result = %r4%
+	call :ln return = %r4%
 
 endlocal & set %~1=%return%
 exit /b 0
@@ -519,21 +520,23 @@ setlocal EnableDelayedExpansion
 	set debug=rem
 	set w=%~2
 
-	call :compare compare = %w%
+	call :compare compare = %w%, %ZERO%
 	if %compare% leq 0 (
 		endlocal & set %~1=%NAN%
 		exit /b 0
 	)
-	
-	:: ln(M * 2^E) = ln(M) + E * ln(2)
-	:: 0.5 <= M < 1
+
 	call :_normalize m, e = %w%
 
 	call :add r1 = %m%, %ONE%
 	call :sub r2 = %m%, %ONE%
 
-	call :hyperbolic_cordic _x, _y, z = %r1%, %r2%, %ZERO%, %VECTORING%
+	:: ln(w) = 2 * atanh(w - 1 / w + 1)
+	:: z1 = z0 + atanh(y / x)
+	call :_hyperbolic_cordic _x, _y, z = %r1%, %r2%, %ZERO%, %VECTORING%
 	
+	:: ln(M * 2^E) = ln(M) + E * ln(2)
+	:: 0.5 <= M < 1
 	call :shift r3 = %z%, 1
 	call :set e = %e%
 	call :mul r4 = %e%, %LN_2%
