@@ -5,6 +5,7 @@ setlocal EnableDelayedExpansion
 	set w=%~2
 	set t=%~3
 
+	:: w^t = e^(t * ln(w))
 	call :ln r1 = %w%
 	call :mul r2 = %t%, %r1%
 	call :exp return = %r2%
