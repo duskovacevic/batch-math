@@ -38,3 +38,6 @@ SaveResults("acosh", df)
 
 df = Invoke("atanh", -0.975, 0.975, 80, lambda x : math.atanh(x))
 SaveResults("atanh", df)
+
+df = Invoke("exp", -4, 4, 80, lambda x : math.exp(x))
+SaveResults("exp", df)

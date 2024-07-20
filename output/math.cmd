@@ -17,6 +17,7 @@ setlocal EnableDelayedExpansion
 	set TWO=1073741824E1
 	set HALF=1073741824E-1
 	set QUARTER=1073741824E-2
+	set _E=1459366439E1
 	set ROTATION=rotation
 	set VECTORING=vectoring
 	set MINUS=-
@@ -106,6 +107,9 @@ setlocal EnableDelayedExpansion
 		set param2=%~4
 	)
 
+	set convert=%FALSE%
+	if [%method%] equ [:set] goto :main_skip_set
+
 	if [%param1:E=%] == [%param1%] (
 		set convert=%TRUE%
 		call :set param1 = %param1%
@@ -113,6 +117,8 @@ setlocal EnableDelayedExpansion
 			call :set param2 = %param2%
 		)
 	)
+
+	:main_skip_set
 	
 	:: TODO handle more params
 	:: TODO add some help
@@ -355,8 +361,6 @@ setlocal EnableDelayedExpansion
 	:: atanh(1 - M*2^-E) = atanh(T) + (E/2) * ln2
 	call :set fE = %E%
 	call :shift halfE = %fE%, -1
-	:: set /a halfE=E / 2
-	::call :set halfE = %halfE%
 	call :mul r8 = %halfE%, %LN_2%
 	call :add return = %z%, %r8%
 
@@ -493,6 +497,16 @@ setlocal EnableDelayedExpansion
 
 	set debug=rem
 	set w=%~2
+
+	if %w% equ %ZERO% (
+		endlocal & set %~1=%ONE%
+		exit /b 0
+	)
+
+	if %w% equ %ONE% (
+		endlocal & set %~1=%_E%
+		exit /b 0
+	)
 
 	:: exp(Q * ln2 + D) = 2^Q * (cosh D + sinh D)
 	:: |D| < ln2
@@ -1062,8 +1076,6 @@ setlocal EnableDelayedExpansion
 		
 		set /a i+=1 & goto :for_hyperbolic
 	:done_hyperbolic
-
-	%debug% echo %_c%[_hyperbolic_cordic.cmd][line 72]%_r% %x%, %y%, %z%
 	
 endlocal & set "%~1=%x%" & set "%~2=%y%" & set "%~3=%z%"
 exit /b 0

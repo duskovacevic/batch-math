@@ -4,6 +4,16 @@ setlocal EnableDelayedExpansion
 	set debug=rem
 	set w=%~2
 
+	if %w% equ %ZERO% (
+		endlocal & set %~1=%ONE%
+		exit /b 0
+	)
+
+	if %w% equ %ONE% (
+		endlocal & set %~1=%_E%
+		exit /b 0
+	)
+
 	:: exp(Q * ln2 + D) = 2^Q * (cosh D + sinh D)
 	:: |D| < ln2
 	call :div Q = %w%, %LN_2%

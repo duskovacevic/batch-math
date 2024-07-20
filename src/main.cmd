@@ -19,6 +19,9 @@ setlocal EnableDelayedExpansion
 		set param2=%~4
 	)
 
+	set convert=%FALSE%
+	if [%method%] equ [:set] goto :main_skip_set
+
 	if [%param1:E=%] == [%param1%] (
 		set convert=%TRUE%
 		call :set param1 = %param1%
@@ -26,6 +29,8 @@ setlocal EnableDelayedExpansion
 			call :set param2 = %param2%
 		)
 	)
+
+	:main_skip_set
 	
 	:: TODO handle more params
 	:: TODO add some help
