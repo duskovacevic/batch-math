@@ -205,28 +205,12 @@ setlocal EnableDelayedExpansion
 		exit /b 0
 	)
 
-	%debug% echo %_c%[acosh.cmd][line 17]%_r% [%w%]
-
 	:: acosh(w) = ln(w + sqrt(w^2 - 1))
 	call :mul r1 = %w%, %w%
-
-	%debug% echo %_c%[acosh.cmd][line 22]%_r% [%r1%]
-
 	call :sub r2 = %r1%, %ONE%
-
-	%debug% echo %_c%[acosh.cmd][line 26]%_r% [%r2%]
-
 	call :sqrt r3 = %r2%
-
-	%debug% echo %_c%[acosh.cmd][line 30]%_r% [%r3%]
-
 	call :add r4 = %w%, %r3%
-
-	%debug% echo %_c%[acosh.cmd][line 34]%_r% [%r4%]
-
 	call :ln return = %r4%
-
-	%debug% echo %_c%[acosh.cmd][line 38]%_r% [%return%]
 
 endlocal & set %~1=%return%
 exit /b 0
@@ -314,12 +298,12 @@ setlocal EnableDelayedExpansion
 	set debug=rem
 	set w=%~2
 
-	set :compare compare = %w%, -%ONE%
+	call :compare compare = %w%, -%ONE%
 	if %compare% leq 0 (
 		endlocal & set %~1=%NAN%
 		exit /b 0
 	)
-	set :compare compare = %w%, %ONE%
+	call :compare compare = %w%, %ONE%
 	if %compare% geq 0 (
 		endlocal & set %~1=%NAN%
 		exit /b 0
@@ -338,7 +322,6 @@ setlocal EnableDelayedExpansion
 	call :sub M = %ONE%, %r1%
 	set /a E = 0
 
-	:: _normalize?
 	:while_atanh
 		call :compare compare = %M%, %HALF%
 		if %compare% geq 0 goto :done_atanh
@@ -349,30 +332,37 @@ setlocal EnableDelayedExpansion
 		goto :while_atanh
 	:done_atanh
 
-	if %E% equ 0 (	
-		:: z1 = z0 + atanh(y / x)
-		call :hyperbolic_cordic _x, _y, return = %ONE%, %w%, %ZERO%, %VECTORING%
-	) else (
+	if %E% neq 0 goto :atanh_normalize
+	
+	:: z1 = z0 + atanh(y / x)
+	call :_hyperbolic_cordic _x, _y, return = %ONE%, %w%, %ZERO%, %VECTORING%
+	endlocal & set %~1=%return%
+	exit /b 0
 
-		call :sub r2 = %TWO%, %M%
-		call :shift r3 = %M%, -%E%
-		call :sub r4 = %r2%, %r3%
-		call :add r5 = %TWO%, %M%
-		call :sub r6 = %r5%, %r3%
-		call :div r7 = %r4%, %r6%
+	:atanh_normalize
 
-		:: z1 = z0 + atanh(y / x)
-		call :_hyperbolic_cordic _x, _y, z = %ONE%, %r7%, %ZERO%, %VECTORING%
+	:: T = (2 - M - M * 2^-E) / (2 + M - M * 2^-E)
+	call :sub r2 = %TWO%, %M%
+	call :shift r3 = %M%, -%E%
+	call :sub r4 = %r2%, %r3%
+	call :add r5 = %TWO%, %M%
+	call :sub r6 = %r5%, %r3%
+	call :div r7 = %r4%, %r6%
 
-		set /a halfE=E / 2
-		call :set halfE = %halfE%
-		call :mul r8 = %halfE%, %LN_2%
-		call :add return = %z%, %r8%
+	:: z1 = z0 + atanh(y / x)
+	call :_hyperbolic_cordic _x, _y, z = %ONE%, %r7%, %ZERO%, %VECTORING%
 
-		call :is_negative wNeg = %w%
-		if %wNeg% equ %TRUE% (
-			call :negate return = %return%
-		)
+	:: atanh(1 - M*2^-E) = atanh(T) + (E/2) * ln2
+	call :set fE = %E%
+	call :shift halfE = %fE%, -1
+	:: set /a halfE=E / 2
+	::call :set halfE = %halfE%
+	call :mul r8 = %halfE%, %LN_2%
+	call :add return = %z%, %r8%
+
+	call :is_negative wNeg = %w%
+	if %wNeg% equ %TRUE% (
+		call :negate return = %return%
 	)
 
 endlocal & set %~1=%return%
@@ -1072,6 +1062,8 @@ setlocal EnableDelayedExpansion
 		
 		set /a i+=1 & goto :for_hyperbolic
 	:done_hyperbolic
+
+	%debug% echo %_c%[_hyperbolic_cordic.cmd][line 72]%_r% %x%, %y%, %z%
 	
 endlocal & set "%~1=%x%" & set "%~2=%y%" & set "%~3=%z%"
 exit /b 0
