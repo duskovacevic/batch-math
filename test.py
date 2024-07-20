@@ -50,3 +50,6 @@ SaveResults("ln", df)
 
 df = Invoke2("log", 10, 0.05, 4, 80, lambda x : math.log10(x))
 SaveResults2("log", df)
+
+df = Invoke("sqrt", 0, 4, 80, lambda x : math.sqrt(x))
+SaveResults("sqrt", df)
