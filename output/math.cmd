@@ -531,8 +531,19 @@ setlocal EnableDelayedExpansion
 	set w=%~2
 
 	call :compare compare = %w%, %ZERO%
+	
 	if %compare% leq 0 (
 		endlocal & set %~1=%NAN%
+		exit /b 0
+	)
+
+	if %w% equ %ONE% (
+		endlocal & set %~1=%ZERO%
+		exit /b 0
+	)
+
+	if %w% equ %_E% (
+		endlocal & set %~1=%ONE%
 		exit /b 0
 	)
 
