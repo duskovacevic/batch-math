@@ -1,10 +1,11 @@
-:log return = w, b
+:log return = b, w
 setlocal EnableDelayedExpansion
 
 	set debug=rem
-	set w=%~2
-	set b=%~3
+	set b=%~2
+	set w=%~3
 
+	:: log b(w) = ln(w) / ln(b)
 	call :ln r1 = %w%
 	call :ln r2 = %b%
 	call :div return = %r1%, %r2%

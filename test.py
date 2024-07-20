@@ -42,8 +42,11 @@ SaveResults("atanh", df)
 df = Invoke("exp", -4, 4, 80, lambda x : math.exp(x))
 SaveResults("exp", df)
 
-df = Invoke2("pow", 10, -4, 4, 80, lambda x, y : math.pow(x, y))
+df = Invoke2("pow", 10, -4, 4, 80, lambda x : math.pow(10, x))
 SaveResults2("pow", df)
 
 df = Invoke("ln", 0.05, 4, 80, lambda x : math.log(x))
 SaveResults("ln", df)
+
+df = Invoke2("log", 10, 0.05, 4, 80, lambda x : math.log10(x))
+SaveResults2("log", df)

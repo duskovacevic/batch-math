@@ -72,8 +72,8 @@ def Invoke2(method: str, x: float, start: float, end: float, steps: int, validat
                     fX0 = float(x0)
                     fX1 = float(x1)
                     fY = float(y)
-                    data.append([fX0, fX1, fY, validate(fX0, fX1)])
-                    print(f"{method}({x0}, {x1}) = {y} should be {validate(fX0, fX1)}")
+                    data.append([fX0, fX1, fY, validate(fX1)])
+                    print(f"{method}({x0}, {x1}) = {y} should be {validate(fX1)}")
             processes.difference_update([
                 p for p in processes if p.poll() is not None])
     
@@ -86,8 +86,8 @@ def Invoke2(method: str, x: float, start: float, end: float, steps: int, validat
                 fX0 = float(x0)
                 fX1 = float(x1)
                 fY = float(y)
-                data.append([fX0, fX1, fY, validate(fX0, fX1)])
-                print(f"{method}({x0}, {x1}) = {y} should be {validate(fX0, fX1)}")
+                data.append([fX0, fX1, fY, validate(fX1)])
+                print(f"{method}({x0}, {x1}) = {y} should be {validate(fX1)}")
         processes.difference_update([
             p for p in processes if p.poll() is not None])
 
