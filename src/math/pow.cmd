@@ -1,7 +1,6 @@
 :pow return = w, t
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set w=%~2
 	set t=%~3
 

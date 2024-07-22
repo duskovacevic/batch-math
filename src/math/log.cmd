@@ -1,7 +1,6 @@
 :log return = b, w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set b=%~2
 	set w=%~3
 

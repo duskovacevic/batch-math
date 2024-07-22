@@ -1,8 +1,6 @@
 :cos return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
-
 	:: cos((Q * π / 2) + D) 
 	::  = cos D if Q mod 4 = 0
 	::  = -sin D if Q mod 4 = 1

@@ -1,7 +1,6 @@
 :asin return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set w=%~2
 
 	if %w% equ -%ONE% (
@@ -14,7 +13,6 @@ setlocal EnableDelayedExpansion
 	)
 	call :compare compare = %w%, -%ONE%
 	if %compare% lss 0 (
-		echo test 5
 		endlocal & set %~1=%NAN%
 		exit /b 0
 	)

@@ -1,7 +1,6 @@
 :_hyperbolic_cordic x, y, z = x0, y0, z0, vecmode
 setlocal EnableDelayedExpansion
 	
-	set debug=rem
 	set x=%~4
 	set y=%~5
 	set z=%~6
@@ -17,8 +16,6 @@ setlocal EnableDelayedExpansion
 			if !j! geq 2 goto :done_hyperbolic_inner
 			
 			set /a l=-i - 1
-
-			%debug% echo x=%x%, y=%y%, z=%z%
 			
 			if %vecmode% equ %VECTORING% (
 				call :is_negative yNeg = !y!

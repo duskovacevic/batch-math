@@ -1,7 +1,6 @@
 :to_string return = value
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set /a done=%FALSE%
 	if [%~2] equ [%POS_INF%] set /a done=%TRUE%
 	if [%~2] equ [%NEG_INF%] set /a done=%TRUE%
@@ -14,37 +13,23 @@ setlocal EnableDelayedExpansion
 
 	set /a whole=0
 	call :_decode m,e=%~2
-	
-	%debug% echo test 1 = [%m%][%e%]
 
 	if %m% lss 0 (
 		set sign=-
 		set /a m=-m
 	)
 	
-	%debug% echo test 2 = [%sign%][%m%][%e%]
-	
 	set /a binFrac=m
-	
-	%debug% echo test 4 = [!binFrac!]
 	
 	if %e% gtr -1 (
 		set /a "int=m >> (30 - e)"
 		set /a "intPart=int << (30 - e)"
-		
-		%debug% echo test 4a = [!int!][!intPart!]
-		
 		set /a "binFrac=m - intPart"
-		
-		%debug% echo test 4b = [!binFrac!]
-		
 		set /a "binFrac<<=e+1"
 	) else (
 		set /a int=0
 		set /a "binFrac>>=-e-1"
 	)
-		
-	%debug% echo test 5 = [!int!][!binFrac!]
 	
 	set /a test=1073741824
 
@@ -127,15 +112,11 @@ setlocal EnableDelayedExpansion
 	
 	:skip_fraction
 
-	%debug% echo compare = [!decFrac!][!fdecFrac!][!ffdecFrac!]
-	
 	set /a "test>>=1"
 	set /a i+=1
 	if !i! lss 31 goto :for_to_string
 	
 	set strDecFrac=%decFrac:~1%%fdecFrac:~1%%ffdecFrac:~1%
-	
-	%debug% echo test 8 = [%sign%%int%.%strDecFrac%]
 	
 endlocal & set %~1=%sign%%int%.%strDecFrac%
 exit /b 0

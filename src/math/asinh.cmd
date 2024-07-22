@@ -1,7 +1,6 @@
 :asinh return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set w=%~2
 
 	:: ln(w + sqrt(w^2 + 1))

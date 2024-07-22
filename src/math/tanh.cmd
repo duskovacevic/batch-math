@@ -1,8 +1,6 @@
 :tanh return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
-
 	:: tanh(w) = sinh(w) / cosh(w)
 	:: D < ln2
 	set w=%~2

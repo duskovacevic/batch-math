@@ -2,7 +2,6 @@ import subprocess
 import time
 import pandas as pd
 import matplotlib.pyplot as plt
-from tests.float import Set, ToString
 
 command = "output\\math.cmd"
 csv = ".\\output\\csv"

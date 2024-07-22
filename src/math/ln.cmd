@@ -1,7 +1,6 @@
 :ln return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set w=%~2
 
 	call :compare compare = %w%, %ZERO%

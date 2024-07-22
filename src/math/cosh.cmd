@@ -1,8 +1,6 @@
 :cosh return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
-
 	:: cosh(Q * ln2 + D) = (2^Q / 2)(cosh D + sinh D + (2^(-2 * Q) * (cosh D - sinh D)))
 	:: D < ln2
 	set w=%~2

@@ -1,18 +1,13 @@
 :_normalize m, e = a
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set a=%~3
 	
 	set /a e=0
 	call :abs m = %a%
 	
-	%debug% echo _normalize 1 - [%m%][%HALF%]
-
 	:while_normalize_less
 	call :compare compare = %m%, %HALF%
-	
-	%debug% echo _normalize 2 - [%compare%][!compare!]
 	
 	if %compare% geq 0 goto :while_normalize_more
 	
@@ -23,8 +18,6 @@ setlocal EnableDelayedExpansion
 	
 	:while_normalize_more
 	call :compare compare = %m%, %ONE%
-	
-	%debug% echo _normalize 3 - [%compare%]
 	
 	if %compare% lss 0 goto :done_normalize
 	

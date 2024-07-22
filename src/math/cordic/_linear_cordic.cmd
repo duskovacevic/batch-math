@@ -30,12 +30,6 @@ setlocal EnableDelayedExpansion
 		:: z = z - t
 		call :sub z = %z%, %t%
 		
-		rem echo linear 4 - [%x%][%y%][%z%]
-		rem call :to_string sx = %x%
-		rem call :to_string sy = %y%
-		rem call :to_string sz = %z%
-		rem echo linear 4a - [%sy%][%sz%]
-
 		goto :continue_linear
 		
 		:negativeDirection_linear
@@ -45,13 +39,7 @@ setlocal EnableDelayedExpansion
 		
 		:: z = z + t
 		call :add z = %z%, %t%
-		
-		rem echo linear 5 - [%x%][%y%][%z%]
-		rem call :to_string sx = %x%
-		rem call :to_string sy = %y%
-		rem call :to_string sz = %z%
-		rem echo linear 5a - [%sy%][%sz%]
-		
+				
 		:continue_linear
 		
 		call :shift t = %t%, -1

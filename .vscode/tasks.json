@@ -16,7 +16,7 @@
         {
             "label": "Run tests",
             "type": "shell",
-            "command": "python ./test.py",
+            "command": "python ./tests/test.py",
             "problemMatcher": [],
             "group": {
                 "kind": "test",

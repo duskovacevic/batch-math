@@ -1,4 +1,4 @@
-from tests.invoke import Invoke, Invoke2, SaveResults, SaveResults2
+from invoke import Invoke, Invoke2, SaveResults, SaveResults2
 import math
 
 df = Invoke("sin", -math.pi * 2, math.pi * 2, 80, lambda x : math.sin(x))
@@ -29,7 +29,7 @@ SaveResults("cosh", df)
 
 df = Invoke("tanh", -4, 4, 80, lambda x : math.tanh(x))
 SaveResults("tanh", df)
-
+ 
 df = Invoke("asinh", -4, 4, 80, lambda x : math.asinh(x))
 SaveResults("asinh", df)
 

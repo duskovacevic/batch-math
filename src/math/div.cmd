@@ -2,8 +2,6 @@
 :div return = n, d
 setlocal EnableDelayedExpansion
 
-    set debug=rem
-
     :: log2((P + 1) / log2(17)) ~ 3 where P is number of bits i.e. 31
     set REPEAT=3
     set F48_17=1515870846E1

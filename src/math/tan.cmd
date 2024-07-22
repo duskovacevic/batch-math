@@ -1,6 +1,5 @@
 :tan return = w
 setlocal EnableDelayedExpansion
-	set debug=rem
 
 	:: tan(w) = sin(w) / cos(w)
 	set w=%~2
@@ -18,11 +17,7 @@ setlocal EnableDelayedExpansion
 	call :sub D = %w%, %m%
 	set /a "Qmod4=Q%%4"
 
-	%debug% echo %Q%, %m%, %D%
-
 	call :_circular_cordic x, y, _z = %inverseCircularGain%, %ZERO%, %D%, %ROTATION%
-
-	%debug% echo %x%, %y%, %_z%
 
 	call :negate negX = %x%
 	call :negate negY = %y%

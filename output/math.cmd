@@ -198,7 +198,6 @@ exit /b 0
 :acosh return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set w=%~2
 
 	call :compare compare = %w%, %ONE%
@@ -224,7 +223,6 @@ exit /b 0
 :asin return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set w=%~2
 
 	if %w% equ -%ONE% (
@@ -237,7 +235,6 @@ setlocal EnableDelayedExpansion
 	)
 	call :compare compare = %w%, -%ONE%
 	if %compare% lss 0 (
-		echo %_c%[asin.cmd][line 17]%_r% test 5
 		endlocal & set %~1=%NAN%
 		exit /b 0
 	)
@@ -260,7 +257,6 @@ exit /b 0
 :asinh return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set w=%~2
 
 	:: ln(w + sqrt(w^2 + 1))
@@ -276,7 +272,6 @@ exit /b 0
 :atan return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set w=%~2
 
 	:: atan(1 / w) = π / 2 - atan(w)
@@ -301,7 +296,6 @@ exit /b 0
 :atanh return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set w=%~2
 
 	call :compare compare = %w%, -%ONE%
@@ -375,8 +369,6 @@ exit /b 0
 :cos return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
-
 	:: cos((Q * π / 2) + D) 
 	::  = cos D if Q mod 4 = 0
 	::  = -sin D if Q mod 4 = 1
@@ -412,8 +404,6 @@ exit /b 0
 :cosh return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
-
 	:: cosh(Q * ln2 + D) = (2^Q / 2)(cosh D + sinh D + (2^(-2 * Q) * (cosh D - sinh D)))
 	:: D < ln2
 	set w=%~2
@@ -440,8 +430,6 @@ exit /b 0
 :: See https://en.wikipedia.org/wiki/Division_algorithm#Pseudocode
 :div return = n, d
 setlocal EnableDelayedExpansion
-
-    set debug=rem
 
     :: log2((P + 1) / log2(17)) ~ 3 where P is number of bits i.e. 31
     set REPEAT=3
@@ -495,7 +483,6 @@ exit /b 0
 :exp return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set w=%~2
 
 	if %w% equ %ZERO% (
@@ -527,7 +514,6 @@ exit /b 0
 :ln return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set w=%~2
 
 	call :compare compare = %w%, %ZERO%
@@ -569,7 +555,6 @@ exit /b 0
 :log return = b, w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set b=%~2
 	set w=%~3
 
@@ -584,7 +569,6 @@ exit /b 0
 :pow return = w, t
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set w=%~2
 	set t=%~3
 
@@ -599,8 +583,6 @@ exit /b 0
 :sin return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
-
 	:: sin((Q * π / 2) + D) 
 	::  = sin D if Q mod 4 = 0
 	::  = cos D if Q mod 4 = 1
@@ -609,33 +591,13 @@ setlocal EnableDelayedExpansion
 	set w=%~2
 
 	call :div Q = %w%, %HALF_PI%
-	%debug% echo %_c%[sin.cmd][line 14]%_r% Q = [%Q%]
-	%debug% call :to_string sq = %Q%
-	%debug% echo %_c%[sin.cmd][line 16]%_r% sq = [%sq%]
-	
 	call :to_int Q = %Q%
-	%debug% echo %_c%[sin.cmd][line 19]%_r% Q = [%Q%]
 	call :set fQ = %Q%
-	%debug% echo %_c%[sin.cmd][line 21]%_r% fQ = [%fQ%]
-	%debug% call :to_string sfQ = %fQ%
-	%debug% echo %_c%[sin.cmd][line 23]%_r% sfQ = [%sfQ%]
-	
 	call :mul m = %fQ%, %HALF_PI%
-	%debug% call :to_string sm = %m%
-	%debug% echo %_c%[sin.cmd][line 27]%_r% sm = [%sm%]
 	call :sub D = %w%, %m%
 	set /a "Qmod4=Q%%4"
 
-	%debug% echo %_c%[sin.cmd][line 31]%_r% sin 0 - [%Q%][%w%][%m%][%Qmod4%]
-	
-	%debug% echo %_c%[sin.cmd][line 33]%_r% sin 1 - [%inverseCircularGain%][%D%]
-	%debug% call :to_string sicg = %inverseCircularGain%
-	%debug% call :to_string sd = %D%
-	%debug% echo %_c%[sin.cmd][line 36]%_r% sin 2 - [%sicg%][%sd%]
-
 	call :_circular_cordic x, y, _z = %inverseCircularGain%, %ZERO%, %D%, %ROTATION%
-	
-	%debug% echo %_c%[sin.cmd][line 40]%_r% sin 3 - [%x%][%y%][%_z%]
 
 	if %Qmod4% equ 0 set return=%y% & goto :sin_done
 	if %Qmod4% equ 1 set return=%x% & goto :sin_done
@@ -654,8 +616,6 @@ exit /b 0
 :sinh return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
-
 	:: sinh(Q * ln2 + D) = (2^Q / 2)(cosh D + sinh D - (2^(-2 * Q) * (cosh D - sinh D)))
 	:: D < ln2
 	set w=%~2
@@ -666,18 +626,7 @@ setlocal EnableDelayedExpansion
 	call :mul m = %fQ%, %LN_2%
 	call :sub D = %w%, %m%
 
-	%debug% echo %_c%[sinh.cmd][line 16]%_r% Q=%fQ%, m=%m%, D=%d%
-	%debug% call :to_string sm = %m%
-	%debug% call :to_string sd = %D%
-	%debug% echo %_c%[sinh.cmd][line 19]%_r% Q=%Q%, m=%sm%, D=%sd%
-
 	call :_hyperbolic_cordic x, y, _z = %inverseHyperbolicGain%, %ZERO%, %D%, %ROTATION%
-	
-	%debug% echo %_c%[sinh.cmd][line 23]%_r% x=%x%, y=%y%, z=%_z%
-	%debug% call :to_string sx = %x%
-	%debug% call :to_string sy = %y%
-	%debug% call :to_string sz = %_z%
-	%debug% echo %_c%[sinh.cmd][line 27]%_r% x=%sx%, y=%sy%, z=%sz%
 
 	call :add r1 = %x%, %y%
 	call :sub r2 = %x%, %y%
@@ -693,7 +642,6 @@ exit /b 0
 :sqrt return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set w=%~2
 	
 	call :is_negative wNeg = %w%
@@ -742,7 +690,6 @@ exit /b 0
 
 :tan return = w
 setlocal EnableDelayedExpansion
-	set debug=rem
 
 	:: tan(w) = sin(w) / cos(w)
 	set w=%~2
@@ -760,11 +707,7 @@ setlocal EnableDelayedExpansion
 	call :sub D = %w%, %m%
 	set /a "Qmod4=Q%%4"
 
-	%debug% echo %_c%[tan.cmd][line 21]%_r% %Q%, %m%, %D%
-
 	call :_circular_cordic x, y, _z = %inverseCircularGain%, %ZERO%, %D%, %ROTATION%
-
-	%debug% echo %_c%[tan.cmd][line 25]%_r% %x%, %y%, %_z%
 
 	call :negate negX = %x%
 	call :negate negY = %y%
@@ -785,8 +728,6 @@ exit /b 0
 
 :tanh return = w
 setlocal EnableDelayedExpansion
-
-	set debug=rem
 
 	:: tanh(w) = sinh(w) / cosh(w)
 	:: D < ln2
@@ -814,18 +755,13 @@ exit /b 0
 :_normalize m, e = a
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set a=%~3
 	
 	set /a e=0
 	call :abs m = %a%
 	
-	%debug% echo %_c%[_normalize.cmd][line 10]%_r% _normalize 1 - [%m%][%HALF%]
-
 	:while_normalize_less
 	call :compare compare = %m%, %HALF%
-	
-	%debug% echo %_c%[_normalize.cmd][line 15]%_r% _normalize 2 - [%compare%][!compare!]
 	
 	if %compare% geq 0 goto :while_normalize_more
 	
@@ -836,8 +772,6 @@ setlocal EnableDelayedExpansion
 	
 	:while_normalize_more
 	call :compare compare = %m%, %ONE%
-	
-	%debug% echo %_c%[_normalize.cmd][line 27]%_r% _normalize 3 - [%compare%]
 	
 	if %compare% lss 0 goto :done_normalize
 	
@@ -858,8 +792,6 @@ exit /b 0
 
 :_circular_cordic x, y, z = x0, y0, z0, vecmode
 setlocal EnableDelayedExpansion
-	
-	set debug=rem
 
 	set x=%~4
 	set y=%~5
@@ -889,17 +821,9 @@ setlocal EnableDelayedExpansion
 		call :add y = %y%, %x2%
 		
 		set "atanValue=!atanTable[%i%]!"
-		::echo %_c%[_circular_cordic.cmd][line 34]%_r% bug 1 [%z%]
+		
 		call :sub z = %z%, !atanValue!
-		::echo %_c%[_circular_cordic.cmd][line 36]%_r% bug 2 [%z%][!atanValue!]
-
-		::%debug% echo %_c%[_circular_cordic.cmd][line 38]%_r% circular 1 - [%x1%][%y%][%z%][%atanValue%]
-		%debug% call :to_string sx = %x1%
-		%debug% call :to_string sy = %y%
-		%debug% call :to_string sz = %z%
-		%debug% call :to_string atan = %atanValue%
-		%debug% echo %_c%[_circular_cordic.cmd][line 43]%_r% circular 1a - [%sx%][%sy%][%sz%][%atan%]
-
+		
 		goto :continue_circular
 		
 		:negativeDirection_circular
@@ -911,14 +835,7 @@ setlocal EnableDelayedExpansion
 		
 		set "atanValue=!atanTable[%i%]!"
 		call :add z = %z%, !atanValue!
-		
-		::%debug% echo %_c%[_circular_cordic.cmd][line 57]%_r% circular 2 - [%x1%][%y%][%z%][%atanValue%]
-		%debug% call :to_string sx = %x1%
-		%debug% call :to_string sy = %y%
-		%debug% call :to_string sz = %z%
-		%debug% call :to_string atan = %atanValue%
-		%debug% echo %_c%[_circular_cordic.cmd][line 62]%_r% circular 2a - [%sx%][%sy%][%sz%][%atan%]
-		
+				
 		:continue_circular
 		
 		set x=%x1%
@@ -931,8 +848,7 @@ exit /b 0
 
 :_cordic_div return = l, r
 setlocal EnableDelayedExpansion
-    
-	set debug=rem
+
 	set l=%~2
 	set r=%~3
 	
@@ -953,8 +869,6 @@ setlocal EnableDelayedExpansion
 	:: 0.25 <= Ml / 2 *Mr < 1.0
 	call :_normalize Ml, El = %l%
 	call :_normalize Mr, Er = %r%
-
-	%debug% echo %_c%[_cordic_div.cmd][line 26]%_r% Ml = [%Ml%] El = [%El%] Mr = [%Mr%] Er = [%Er%]
 	
 	call :shift MrShift = %Mr%, 1
 	
@@ -962,9 +876,6 @@ setlocal EnableDelayedExpansion
 		
 	set /a e=El-Er+1
 	call :shift return = %z%, %e%
-
-	::call :_fast_divide t = %l%, %r%
-	::echo %_c%[_cordic_div.cmd][line 36]%_r% DIV [%l%][%r%][%return%][%t%]
 
 endlocal & set %~1=%return%
 exit /b 0
@@ -974,8 +885,6 @@ setlocal EnableDelayedExpansion
        
 	set l=%~2
 	set r=%~3
-	
-	:: echo %_c%[_cordic_mul.cmd][line 7]%_r% mul 1 - [%l%][%r%]
 	
 	if %l% equ %ZERO% (
 		endlocal & set %~1=%ZERO%
@@ -999,30 +908,18 @@ setlocal EnableDelayedExpansion
 	call :_normalize Ml, El = %l%
 	call :_normalize Mr, Er = %r%
 	
-	:: echo %_c%[_cordic_mul.cmd][line 31]%_r% mul 2 - [%Ml%][%El%][%Mr%][%Er%]
-	
 	call :_linear_cordic _x, y, _z = %Ml%, %ZERO%, %Mr%, %ROTATION%
-	
-	rem note that rotation assumes that Z goes towards 0 so expect a low value for Z
-	rem note that linear doesn't touch X therefore it should remain the same
-	
-	:: echo %_c%[_cordic_mul.cmd][line 38]%_r% mul 3 - [%_x%][%y%][%_z%]
-	
+		
 	set /a e=El+Er
-	
-	:: echo %_c%[_cordic_mul.cmd][line 42]%_r% mul 4 - [%e%]
 	
 	call :shift y = %y%, %e%
 	
-	:: echo %_c%[_cordic_mul.cmd][line 46]%_r% mul 5 - [%y%]
-
 endlocal & set %~1=%y%
 exit /b 0
 
 :_hyperbolic_cordic x, y, z = x0, y0, z0, vecmode
 setlocal EnableDelayedExpansion
 	
-	set debug=rem
 	set x=%~4
 	set y=%~5
 	set z=%~6
@@ -1038,8 +935,6 @@ setlocal EnableDelayedExpansion
 			if !j! geq 2 goto :done_hyperbolic_inner
 			
 			set /a l=-i - 1
-
-			%debug% echo %_c%[_hyperbolic_cordic.cmd][line 21]%_r% x=%x%, y=%y%, z=%z%
 			
 			if %vecmode% equ %VECTORING% (
 				call :is_negative yNeg = !y!
@@ -1125,12 +1020,6 @@ setlocal EnableDelayedExpansion
 		:: z = z - t
 		call :sub z = %z%, %t%
 		
-		rem echo %_c%[_linear_cordic.cmd][line 33]%_r% linear 4 - [%x%][%y%][%z%]
-		rem call :to_string sx = %x%
-		rem call :to_string sy = %y%
-		rem call :to_string sz = %z%
-		rem echo %_c%[_linear_cordic.cmd][line 37]%_r% linear 4a - [%sy%][%sz%]
-
 		goto :continue_linear
 		
 		:negativeDirection_linear
@@ -1140,13 +1029,7 @@ setlocal EnableDelayedExpansion
 		
 		:: z = z + t
 		call :add z = %z%, %t%
-		
-		rem echo %_c%[_linear_cordic.cmd][line 49]%_r% linear 5 - [%x%][%y%][%z%]
-		rem call :to_string sx = %x%
-		rem call :to_string sy = %y%
-		rem call :to_string sz = %z%
-		rem echo %_c%[_linear_cordic.cmd][line 53]%_r% linear 5a - [%sy%][%sz%]
-		
+				
 		:continue_linear
 		
 		call :shift t = %t%, -1
@@ -1218,7 +1101,6 @@ exit /b 0
 :mod return = a, b
 setlocal EnableDelayedExpansion
 	
-    set debug=rem
 	call :_decode aM, aE = %~2
 	call :_decode bM, bE = %~3
 
@@ -1250,17 +1132,12 @@ exit /b 0
 :mul return = a, b
 setlocal EnableDelayedExpansion
 	
-    set debug=rem
-
 	call :_decode aM, aE = %~2
 	call :_decode bM, bE = %~3
 
     set /a negate = 0
     if %aM% lss 0 set /a negate = 1
     if %bM% lss 0 set /a "negate ^= 1"
-
-    %debug% echo %_c%[mul.cmd][line 13]%_r% $$$ [%negate%]
-
     if %aM% lss 0 set /a aM=-aM
     set /a "aMu = aM >> 16"
     set /a "aMl = aM - (aMu << 16)"
@@ -1268,37 +1145,26 @@ setlocal EnableDelayedExpansion
     set /a "bMu = bM >> 16"
     set /a "bMl = bM - (bMu << 16)"
 	
-    %debug% echo %_c%[mul.cmd][line 22]%_r% aM = [%aM%] aE = [%aE%] bM = [%bM%] bE = [%bE%]
-    %debug% echo %_c%[mul.cmd][line 23]%_r% aMu = [%aMu%] aMl = [%aMl%] bMu = [%bMu%] bMl = [%bMl%]
-
     set /a Muu = aMu * bMu
     set /a Mul = aMu * bMl
     set /a Mlu = aMl * bMu
     set /a Mll = aMl * bMl
-
-    %debug% echo %_c%[mul.cmd][line 30]%_r% Muu = [%Muu%] Mul = [%Mul%] Mlu = [%Mlu%] Mll = [%Mll%]
 
     set /a Euu = aE + bE + 2
     set /a Eul = aE + (bE - 16) + 1
     set /a Elu = (aE - 16) + bE + 1
     set /a Ell = (aE - 16) + (bE - 16) 
 
-    %debug% echo %_c%[mul.cmd][line 37]%_r% Euu = [%Euu%] Eul = [%Eul%] Elu = [%Elu%] Ell = [%Ell%]
-
     call :_encode Muu = %Muu%, %Euu%
     call :_encode Mul = %Mul%, %Eul%
     call :_encode Mlu = %Mlu%, %Elu%
     call :_encode Mll = %Mll%, %Ell%
-
-    %debug% echo %_c%[mul.cmd][line 44]%_r% [%Muu%][%Mul%][%Mlu%][%Mll%]
 
     call :_safe_add r1 = %Muu%, %Mul%
     call :_safe_add r2 = %r1%, %Mlu%
     call :_safe_add return = %r2%, %Mll%
     
     if %negate% equ 1 call :negate return=%return%
-
-    %debug% echo %_c%[mul.cmd][line 52]%_r% $$$ [%negate%][%return%]
 
 endlocal & set %~1=%return%
 exit /b 0
@@ -1315,7 +1181,6 @@ exit /b 0
 :set return = value
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set value=%~2
 
 	:: check if . is specified
@@ -1328,13 +1193,9 @@ setlocal EnableDelayedExpansion
 	call set /a "int=%%value:.%frac%=%%"
 	set /a sign=0
 	
-	%debug% echo %_c%[set.cmd][line 17]%_r% test 1 = [%value%][%int%][%frac%]
-	
 	if [%value:~0,1%] equ [-] (
 		set /a sign=1, int=-int
 	)
-	
-	%debug% echo %_c%[set.cmd][line 23]%_r% test 2 = [%value%][%sign%][%int%][%frac%]
 	
 	if %int% equ 0 (
 		set /a msb=0
@@ -1342,22 +1203,16 @@ setlocal EnableDelayedExpansion
 		call :_most_significant_bit msb = %int%
 	)
 	
-	%debug% echo %_c%[set.cmd][line 31]%_r% test 3 = [%msb%]
-	
 	set /a binFrac=0, fmsb=0, fe=0
 	:: leading zeros are an issue as it gets interpreted as octal
 	set /a decFrac=1%frac%-(11%frac%-1%frac%)/10
-	
-	%debug% echo %_c%[set.cmd][line 37]%_r% test 4 = [%decFrac%]
 	
 	if %decFrac% equ 0 goto :done_set
 
 	set target=1%frac%
 	set /a target=target - decFrac		
 	set /a test=decFrac
-	
-	%debug% echo %_c%[set.cmd][line 45]%_r% test 5 = [!target!][%test%]
-	
+
 	set /a remainingBits=31 - msb
 		
 	:while_set
@@ -1380,12 +1235,8 @@ setlocal EnableDelayedExpansion
 			set /a fmsb+=1
 		)
 		
-		%debug% echo %_c%[set.cmd][line 69]%_r% loop = (!fmsb!)(!test!)(!binFrac!)(!bin!)
-		
 		goto :while_set
 	:done_set
-	
-	%debug% echo %_c%[set.cmd][line 74]%_r% test 6 = [%binFrac%][%fmsb%]
 	
 	if !int! neq 0 (
 		set /a "m=(int << (31 - msb))"
@@ -1405,8 +1256,6 @@ setlocal EnableDelayedExpansion
 	if !sign! equ 1	(
 		set /a m=-m
 	)
-	
-	%debug% echo %_c%[set.cmd][line 95]%_r% test 7 = [!m!][!e!]
 	
 	endlocal & set %~1=%m%E%e%
 exit /b 0
@@ -1446,7 +1295,6 @@ exit /b 0
 :to_string return = value
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set /a done=%FALSE%
 	if [%~2] equ [%POS_INF%] set /a done=%TRUE%
 	if [%~2] equ [%NEG_INF%] set /a done=%TRUE%
@@ -1459,37 +1307,23 @@ setlocal EnableDelayedExpansion
 
 	set /a whole=0
 	call :_decode m,e=%~2
-	
-	%debug% echo %_c%[to_string.cmd][line 18]%_r% test 1 = [%m%][%e%]
 
 	if %m% lss 0 (
 		set sign=-
 		set /a m=-m
 	)
 	
-	%debug% echo %_c%[to_string.cmd][line 25]%_r% test 2 = [%sign%][%m%][%e%]
-	
 	set /a binFrac=m
-	
-	%debug% echo %_c%[to_string.cmd][line 29]%_r% test 4 = [!binFrac!]
 	
 	if %e% gtr -1 (
 		set /a "int=m >> (30 - e)"
 		set /a "intPart=int << (30 - e)"
-		
-		%debug% echo %_c%[to_string.cmd][line 35]%_r% test 4a = [!int!][!intPart!]
-		
 		set /a "binFrac=m - intPart"
-		
-		%debug% echo %_c%[to_string.cmd][line 39]%_r% test 4b = [!binFrac!]
-		
 		set /a "binFrac<<=e+1"
 	) else (
 		set /a int=0
 		set /a "binFrac>>=-e-1"
 	)
-		
-	%debug% echo %_c%[to_string.cmd][line 47]%_r% test 5 = [!int!][!binFrac!]
 	
 	set /a test=1073741824
 
@@ -1572,15 +1406,11 @@ setlocal EnableDelayedExpansion
 	
 	:skip_fraction
 
-	%debug% echo %_c%[to_string.cmd][line 130]%_r% compare = [!decFrac!][!fdecFrac!][!ffdecFrac!]
-	
 	set /a "test>>=1"
 	set /a i+=1
 	if !i! lss 31 goto :for_to_string
 	
 	set strDecFrac=%decFrac:~1%%fdecFrac:~1%%ffdecFrac:~1%
-	
-	%debug% echo %_c%[to_string.cmd][line 138]%_r% test 8 = [%sign%%int%.%strDecFrac%]
 	
 endlocal & set %~1=%sign%%int%.%strDecFrac%
 exit /b 0
@@ -1588,24 +1418,18 @@ exit /b 0
 :_decode m, e = float
 setlocal EnableDelayedExpansion
 
-	::echo %_c%[_decode.cmd][line 4]%_r% _decode
-
 	set float=%~3
 	set e=%float:*E=%
-	
-	:: we need to error out if there is no E
 	
 	set /a "m=!float:E%e%=!" || goto :_decode_error
 
 	goto _decode_done
 
 	:_decode_error
-	echo %_c%[_decode.cmd][line 16]%_r% ERR [%float%][%e%][%m%]
+	echo %_c%[_decode.cmd][line 12]%_r% ERR [%float%][%e%][%m%]
 	pause
 
 	:_decode_done
-	
-	:: echo %_c%[_decode.cmd][line 21]%_r% decode = [%m%][%e%]
 
 endlocal & set "%~1=%m%" & set "%~2=%e%"
 exit /b 0
@@ -1662,14 +1486,11 @@ exit /b 0
 :_safe_add return = a, b
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set a=%~2
 	set b=%~3
 	
 	call :_decode aM, aE = %~2
 	call :_decode bM, bE = %~3
-	
-	%debug% echo %_c%[_safe_add.cmd][line 11]%_r% [%aM%][%aE%][%bM%][%bE%]
 	
 	if %aM% equ 0 (
 		endlocal & set %~1=%bM%E%bE%
@@ -1708,10 +1529,7 @@ setlocal EnableDelayedExpansion
 		)
 	)
 	
-	%debug% echo %_c%[_safe_add.cmd][line 50]%_r% Add 1 - [%aM%] + [%bM%]; [%aE%] [%bE%]
-	
 	:: magic number needs to be handled -2147483648
-
 	set /a newM=aM + bM
 
 	:: check if zero
@@ -1719,8 +1537,6 @@ setlocal EnableDelayedExpansion
 		endlocal & set %~1=%ZERO%
 		exit /b 0
 	)
-	
-	%debug% echo %_c%[_safe_add.cmd][line 62]%_r% Add 2 - = [%newM%] [%newE%]
 	
 	set overflow=%FALSE%
 	if %aM% lss 0 (
@@ -1741,8 +1557,6 @@ setlocal EnableDelayedExpansion
 		set overflow=%TRUE%
 	)
 	
-	%debug% echo %_c%[_safe_add.cmd][line 83]%_r% Add 2a - [%overflow%]
-	
 	if %overflow% equ %TRUE% (
 		:: Overflow
 		set /a "aM>>=1"
@@ -1751,20 +1565,14 @@ setlocal EnableDelayedExpansion
 		set /a newM=aM + bM
 	)
 	
-	%debug% echo %_c%[_safe_add.cmd][line 93]%_r% Add 3 - [!aM!] + [!bM!]; [!aE!] [!bE!] = [!newM!] [!newE!]
-	
 	:: normalize
 	if %newM% neq 0 (
 		set /a sign=0
-		::if %newM% equ -2147483648
 		if %newM% lss 0 (
-			%debug% echo %_c%[_safe_add.cmd][line 100]%_r% What
 			set /a sign=1
 			set /a newM=-newM
 		)
-		%debug% echo %_c%[_safe_add.cmd][line 104]%_r% Add 3a - !newM!
 		call :_most_significant_bit bit = !newM!
-		%debug% echo %_c%[_safe_add.cmd][line 106]%_r% Add 3b - !bit!
 		set /a nE=31 - bit
 		set /a "newM<<=nE"
 		set /a "newE-=nE"
@@ -1772,8 +1580,6 @@ setlocal EnableDelayedExpansion
 			set /a newM=-newM
 		)
 	)
-
-	%debug% echo %_c%[_safe_add.cmd][line 115]%_r% Add 4 - [!aM!] + [!bM!]; [!aE!] [!bE!] = [!newM!] [!newE!]
 
 endlocal & set %~1=%newM%E%newE%
 exit /b 0

@@ -1,7 +1,6 @@
 :atan return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set w=%~2
 
 	:: atan(1 / w) = π / 2 - atan(w)

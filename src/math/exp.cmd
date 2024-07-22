@@ -1,7 +1,6 @@
 :exp return = w
 setlocal EnableDelayedExpansion
 
-	set debug=rem
 	set w=%~2
 
 	if %w% equ %ZERO% (

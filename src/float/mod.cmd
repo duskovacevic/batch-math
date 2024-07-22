@@ -1,7 +1,6 @@
 :mod return = a, b
 setlocal EnableDelayedExpansion
 	
-    set debug=rem
 	call :_decode aM, aE = %~2
 	call :_decode bM, bE = %~3
 
