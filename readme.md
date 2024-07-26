@@ -24,7 +24,7 @@ If you would like to try the library for yourself there are two modes of operati
 
 ### Command line example
 
-```batchfile
+```shell
 .\output\math.cmd :sin 1.0
 
 1.0,0.841470971064330760
@@ -35,7 +35,7 @@ If you would like to try the library for yourself there are two modes of operati
 
 ### From a batch file
 
-```batchfile
+```batch
 set math=.\output\math.cmd
 
 :: Convert string input into a float type
