@@ -67,6 +67,7 @@ To run tests against the library either:
 - Or run
 
 ```shell
+pip install -r ./tests/requirements.txt
 python ./tests/test.py
 ```
 
